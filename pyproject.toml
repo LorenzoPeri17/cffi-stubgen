@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cffi-stubgen"
+version="0.0.0"
+authors = [
+    {name = "Lorenzo Peri"}
+]
+description = "PEP 561 type stubs generator for cffi modules"
+requires-python = ">=3.10"
+dependencies = [
+    "cffi>=1.10",
+    "types-cffi>=1.10",
+    "pycparser>=2"
+]
+readme = "README.md"
+
+[project.urls]
+Repository = "https://github.com/LorenzoPeri17/cffi-stubgen"
+
+[tool.hatch.build.targets.wheel]
+packages = ["cffi-stubgen"]
+
+[project.scripts]
+executive = "project_name.__main__:main"
