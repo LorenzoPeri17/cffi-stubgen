@@ -16,9 +16,12 @@ dependencies = [
     "pycparser>=2"
 ]
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 
 [project.urls]
 Repository = "https://github.com/LorenzoPeri17/cffi-stubgen"
+Issues = "https://github.com/LorenzoPeri17/cffi-stubgen/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["cffi_stubgen"]
