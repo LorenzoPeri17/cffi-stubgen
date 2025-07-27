@@ -25,3 +25,11 @@ packages = ["cffi_stubgen"]
 
 [project.scripts]
 cffi-stubgen = "cffi_stubgen.__main__:main"
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
