@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "cffi-stubgen"
-version="0.0.0"
+version="1.0.0"
 authors = [
     {name = "Lorenzo Peri"}
 ]
