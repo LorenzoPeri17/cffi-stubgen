@@ -75,11 +75,11 @@ def get_arg_parser() -> ArgumentParser:
     
     return parser
         
-def main() -> int:
+def main(argv: list[str]) -> int:
     
     cli_parser = get_arg_parser()
     
-    args = cli_parser.parse_args(sys.argv[1:])
+    args = cli_parser.parse_args(argv[1:])
     
     outdir = args.outdir
     typedefs = args.typedefs.split(" ")
@@ -101,6 +101,19 @@ def main() -> int:
         print(
             f"Hey! It seems that the module {module_name} does not exist. "
             "Have you given me the fully qualified name, like you would type in an import statement?\n"
+            "Here is the raised error:\n",
+            f"{err}",
+            file=sys.stderr
+        )
+        return 1
+    
+    try:
+        mod.ffi
+        mod.lib
+    except AttributeError as err:
+        print(
+            f"Hey! It seems that the module {module_name} is not an ffi module. "
+            "Please make sure to specify the ffi-compiled module, not the parent.\n"
             "Here is the raised error:\n",
             f"{err}",
             file=sys.stderr
@@ -147,4 +160,4 @@ def main() -> int:
     return 0
         
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv))

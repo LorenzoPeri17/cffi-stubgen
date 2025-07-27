@@ -3,7 +3,7 @@ requires = ["setuptools >= 65", "wheel", "cffi>=1.17", "numpy>=2.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "test_module"
+name = "example_module"
 version="0.0.0"
 authors = [
     {name = "Lorenzo Peri"},

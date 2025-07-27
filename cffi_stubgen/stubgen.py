@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import inspect
+import shutil
 
 from pathlib import Path
 
@@ -88,7 +89,7 @@ def get_stubpath(mod: ModuleType,
 def clean_stubs(mod: ModuleType, 
                outdir : str | Path | None = None) -> None:
     stubpath = get_stubpath(mod, outdir)
-    stubpath.rmdir()
+    shutil.rmtree(stubpath)
 
 def make_stubs(mod: ModuleType, 
                outdir : str | Path | None = None, 
@@ -125,13 +126,13 @@ def make_stubs(mod: ModuleType,
         for func in funcs:
             if verbose:
                 print(f"Writing stub for function {func.name}")
-            f.write(f"def {func.name}(")
+            f.write(f"def {func.name}(\n")
             for arg in func.args:
                 if arg == CVarArg:
-                    f.write(f"    *args: Sequence[CDATA],")
+                    f.write(f"    *args: Sequence[CDATA],\n")
                 else:
-                    f.write(f"    {arg.name}: {arg.ctype.pyname},")
-            f.write(f"    ) -> {func.ret_t.pyname}:")
+                    f.write(f"    {arg.name}: {arg.ctype.pyname},\n")
+            f.write(f"    ) -> {func.ret_t.pyname}:\n")
             f.write(f'    """\n')
             f.writelines(["    "+l.strip()+"\n" for l in func.doc.split("\n")])
             f.write(f'    """\n')
