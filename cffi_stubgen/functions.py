@@ -7,7 +7,8 @@ from cffi.cparser import _common_type_names  # type: ignore
 
 from dataclasses import dataclass
 
-from typing import Callable, Self
+from typing import Callable, Any
+from typing_extensions import Self
 
 
 @dataclass(eq=True, slots=True, unsafe_hash=True)
@@ -109,7 +110,7 @@ def _parse_arg(arg: c_ast.Node) -> CFuncArg:
 
 
 def parse_func(
-    func: Callable, typedefs: list[str] | None = None, verbose: bool = False
+    func: Callable[..., Any,], typedefs: list[str] | None = None, verbose: bool = False
 ) -> list[CFunc]:
 
     parser = CParser()

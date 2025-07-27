@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from . import (
+from .stubgen import (
     make_stubs,
     get_functions,
     clean_stubs,

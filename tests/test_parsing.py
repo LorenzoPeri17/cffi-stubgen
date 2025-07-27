@@ -1,5 +1,6 @@
 
 import importlib
+import importlib.util
 import sys
 import pytest #type: ignore
 
@@ -9,8 +10,16 @@ EXAMPLE_MOD = "example_module._example"
 
 @pytest.fixture(scope="module")
 def example_mod():
-    mod = importlib.import_module(EXAMPLE_MOD)
-    return mod
+    # Try to import from the venv site-packages
+    try:
+        spec = importlib.util.find_spec(EXAMPLE_MOD)
+        if not spec or not spec.origin:
+            pytest.skip("example_module._example not found in environment")
+        else:
+            mod = importlib.import_module(EXAMPLE_MOD)
+            return mod
+    except ModuleNotFoundError:
+        pytest.skip("example_module._example not found in environment")
 
 def test_get_functions_names(example_mod):
     funcs, ctypes = get_functions(example_mod)

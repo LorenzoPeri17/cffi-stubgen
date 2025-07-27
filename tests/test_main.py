@@ -1,5 +1,6 @@
 import sys
 import importlib
+import importlib.util
 import pathlib
 import subprocess
 
@@ -10,11 +11,13 @@ EXAMPLE_STUB = "_example"
 
 def _find_example_module():
     # Try to import from the venv site-packages
-    import importlib.util
-    spec = importlib.util.find_spec(EXAMPLE_MOD)
-    if not spec or not spec.origin:
+    try:
+        spec = importlib.util.find_spec(EXAMPLE_MOD)
+        if not spec or not spec.origin:
+            pytest.skip("example_module._example not found in environment")
+        return spec
+    except ModuleNotFoundError:
         pytest.skip("example_module._example not found in environment")
-    return spec
 
 def _stub_path(tmpdir):
     # Where the stubs should be generated

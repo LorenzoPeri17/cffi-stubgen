@@ -59,7 +59,7 @@ def get_functions(
             _f.doc = obj.__doc__
             ctypes.append(_f.ret_t)
             for _a in _f.args:
-                if _a.ctype == CVarArg:
+                if _a.ctype == CVarArg.ctype:
                     continue
                 ctypes.append(_a.ctype)
         funcs.extend(func)
