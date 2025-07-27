@@ -26,16 +26,52 @@ class CType:
     
     @classmethod
     def from_node(cls, arg:c_ast.Node) -> Self:
-        arg_cname = " ".join([q for q in arg.quals]+[a for a in arg.type.names])
-        arg_pyname = "".join([q.title() for q in arg.quals]+[a.title() for a in arg.type.names]).replace(" ", "")
-        match arg.type:
-            case c_ast.TypeDecl:
+        print(type(arg.type))
+        match arg:
+            case c_ast.TypeDecl():
+                arg_cname = " ".join([q for q in arg.quals] +
+                                     [a for a in arg.type.names])
+                arg_pyname = "".join([q.title() for q in arg.quals] +
+                                     [a.title() for a in arg.type.names]).replace(" ", "")
                 return cls(arg_cname, arg_pyname)
-            case c_ast.PtrDecl:
+            case c_ast.PtrDecl():
+                arg_cname = " ".join([q for q in arg.type.quals] +
+                                     [a for a in arg.type.type.names] + 
+                                     [q for q in arg.quals])
+                arg_pyname = "".join([q for q in arg.type.quals] +
+                                     [a for a in arg.type.type.names] + 
+                                     [q for q in arg.quals]).replace(" ", "")
                 return cls(arg_cname + " *", arg_pyname+"_ptr")
-            case c_ast.ArrayDecl:
-                return cls(arg_cname + " []", arg_pyname+"_arr")
+            case c_ast.ArrayDecl():
+                arg_cname = " ".join([q for q in arg.type.quals] +
+                                     [a for a in arg.type.type.names])
+                arg_pyname = "".join([q for q in arg.type.quals] +
+                                     [a for a in arg.type.type.names]).replace(" ", "")
+                if arg.dim:
+                    if isinstance(arg.dim, c_ast.Constant):
+                        dim=str(arg.dim.value)
+                    elif isinstance(arg.dim, c_ast.ID):
+                        dim=str(arg.dim.name)
+                    else:
+                        dim = ""
+                else:
+                    dim = ""
+                return cls(arg_cname + f" [{dim}]", arg_pyname+f"_arr{dim}")
             case _:
+                _ty_arg = []
+                _ty = arg
+                while True:
+                    try:
+                        _ty_arg.extend(_ty.quals)
+                    except AttributeError:
+                        pass
+                    try:
+                        _ty_arg.extend(_ty.names)
+                        break
+                    except AttributeError:
+                        _ty =_ty.type
+                arg_cname = " ".join(_ty_arg)
+                arg_pyname = "".join(_ty_arg).replace(" ", "")
                 return cls(arg_cname, arg_pyname)
 
 @dataclass(slots=True)
