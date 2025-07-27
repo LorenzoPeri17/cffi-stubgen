@@ -21,7 +21,7 @@ def get_arg_parser() -> ArgumentParser:
     parser.add_argument(
         "-o",
         "--output-dir",
-        metavar="outdir",
+        dest="outdir",
         help="The root directory for output stubs (default is same as module)",
         default=None
     )
@@ -29,7 +29,7 @@ def get_arg_parser() -> ArgumentParser:
     parser.add_argument(
         "-t",
         "--typedefs",
-        metavar="typedefs",
+        dest="typedefs",
         type=str,
         help="Additional C types that should be defined",
         default=""
@@ -60,7 +60,7 @@ def get_arg_parser() -> ArgumentParser:
         "--stub-extension",
         type=str,
         default="pyi",
-        metavar="extension",
+        dest="extension",
         choices=["pyi", "py"],
         help="The file extension of the generated stubs. "
         "Must be 'pyi' (default) or 'py'",
@@ -79,14 +79,20 @@ def main() -> int:
     
     cli_parser = get_arg_parser()
     
-    args = cli_parser.parse_args(sys.argv)
+    args = cli_parser.parse_args(sys.argv[1:])
     
     outdir = args.outdir
-    typedefs = args.typedefs.split("")
+    typedefs = args.typedefs.split(" ")
     extension = args.extension
     verbose = args.verbose
     
     module_name = args.module_name
+    if not module_name:
+        print(
+            f"Hey! You gave me an empty module name!",
+            file=sys.stderr
+        )
+        return 1
     try:
         mod = importlib.import_module(module_name)
         if verbose:
@@ -99,10 +105,11 @@ def main() -> int:
             f"{err}",
             file=sys.stderr
         )
+        return 1
     
     if args.dry_run:
         try:
-            get_functions(mod, typedefs)
+            get_functions(mod, typedefs, verbose)
             if verbose:
                 print(f"Dry run completed successfully for module {module_name}")
         except Exception as err:
@@ -111,13 +118,13 @@ def main() -> int:
                 f"{err}",
                 file=sys.stderr
             )
+            return 1
     else:
         try:
-            make_stubs(mod, outdir, typedefs, extension)
+            make_stubs(mod, outdir, typedefs, extension, verbose)
             if verbose:
                 stubpath = get_stubpath(mod, outdir)
                 print(f"Stubs for module {module_name} generated at {stubpath}")
-            return 0
         except Exception as err:
             if not args.no_cleanup:
                 clean_stubs(mod, outdir)
@@ -137,6 +144,7 @@ def main() -> int:
                     file=sys.stderr
                 )
             return 1
+    return 0
         
 if __name__ == "__main__":
     sys.exit(main())

@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from pycparser import (
+from pycparser import ( # type: ignore
     CParser, 
     c_ast
 )
 
 from cffi.commontypes import COMMON_TYPES
-from cffi.cparser import _common_type_names
+from cffi.cparser import _common_type_names # type: ignore
 
 from dataclasses import dataclass
 
@@ -15,7 +15,7 @@ from typing import (
     Self
 )
 
-@dataclass(eq=True, slots=True)
+@dataclass(eq=True, slots=True, unsafe_hash=True)
 class CType:
     cname: str
     pyname: str
@@ -36,7 +36,7 @@ class CType:
             case c_ast.ArrayDecl:
                 return cls(arg_cname + " []", arg_pyname+"_arr")
             case _:
-                raise cls(arg_cname, arg_pyname)
+                return cls(arg_cname, arg_pyname)
 
 @dataclass(slots=True)
 class CFuncArg:
@@ -65,14 +65,14 @@ def _parse_arg(arg : c_ast.Node) -> CFuncArg:
             return CFuncArg(argname, arg_t)
                 
 
-def parse_func(func: Callable, typedefs: list[str] | None = None) -> list[CFunc]:
+def parse_func(func: Callable, typedefs: list[str] | None = None, verbose: bool = False) -> list[CFunc]:
 
     parser = CParser()
     
     if typedefs:
         COMMON_TYPES.update({_t:_t for _t in typedefs})
     
-    sig = func.__doc__.splitlines()[0]
+    sig = func.__doc__.splitlines()[0] #type: ignore
     
     clines = []
     for _t in _common_type_names(sig):
@@ -89,17 +89,21 @@ def parse_func(func: Callable, typedefs: list[str] | None = None) -> list[CFunc]
         if isinstance(decl, c_ast.Decl):
             arg_count = 0
             name = decl.name
+            if verbose:
+                print(f"Parsing {name}")
             func_t = decl.type
-            ret_t = CType.from_node(func.type)
+            ret_t = CType.from_node(func_t.type)
             args = []
             for arg in func_t.args:
-                carg = _parse_arg(arg)
+                carg = _parse_arg(arg.type)
                 if carg.name is None:
                     carg.name = f"arg{arg_count}"
                 arg_count +=1
                 args.append(carg)
-            func = CFunc(name, ret_t, args)
-            funcs.append(func)
+            cfunc = CFunc(name, ret_t, args, "")
+            funcs.append(cfunc)
+    
+    return funcs
     
     
     

@@ -49,7 +49,7 @@ CDATA : TypeAlias = FFI.CData
 
 """
 
-def get_functions(mod: ModuleType, typedefs: list[str] | None = None) -> tuple[list[CFunc], list[CType]]:
+def get_functions(mod: ModuleType, typedefs: list[str] | None = None, verbose: bool = False) -> tuple[list[CFunc], list[CType]]:
     
     funcs : list[CFunc] = []
     ctypes : list[CType] = []
@@ -57,7 +57,7 @@ def get_functions(mod: ModuleType, typedefs: list[str] | None = None) -> tuple[l
     for name, obj in inspect.getmembers(mod.lib):
         if name.startswith('__'):
             continue
-        func = parse_func(obj, typedefs=typedefs)
+        func = parse_func(obj, typedefs=typedefs, verbose=verbose)
         for _f in func:
             _f.doc = obj.__doc__
             ctypes.append(_f.ret_t)
@@ -75,12 +75,12 @@ def get_stubpath(mod: ModuleType,
                outdir : str | Path | None = None) -> Path:
     
     if outdir is None:
-        outdir = os.path.dirname(mod.__file__)
+        outdir = os.path.dirname(mod.__file__) # type:ignore
     else:
         if not os.path.isdir(outdir):
             raise FileNotFoundError(f"The specified directory {outdir} doe not appear to exist")
     
-    stubpath = Path(outdir) /  mod.__name__.split(".")[-1]
+    stubpath = Path(outdir) /  mod.__name__.split(".")[-1] # type:ignore
     
     return stubpath
     
@@ -109,7 +109,7 @@ def make_stubs(mod: ModuleType,
     libpath = stubpath / "lib"
     libpath.mkdir(exist_ok=True)
     
-    funcs, ctypes = get_functions(mod, typedefs)
+    funcs, ctypes = get_functions(mod, typedefs, verbose)
     
     with open(libpath / f"__init__.{extension}", 'w') as f:
         f.write(lib_stub)
@@ -123,7 +123,6 @@ def make_stubs(mod: ModuleType,
         f.writelines(lines)
         
         for func in funcs:
-            line = []
             if verbose:
                 print(f"Writing stub for function {func.name}")
             f.write(f"def {func.name}(")

@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools >= 65", "wheel", "cffi>=1.17", "numpy>=2.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "test_module"
+version="0.0.0"
+authors = [
+    {name = "Lorenzo Peri"},
+]
+description = "A simple module to demonstrate the usage of cffi-stubgen"
+requires-python = ">=3.10"
+dependencies = [
+    "cffi>=1.17",
+    "types-cffi>=1.17"
+]

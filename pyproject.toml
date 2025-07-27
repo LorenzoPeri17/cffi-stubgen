@@ -21,7 +21,7 @@ readme = "README.md"
 Repository = "https://github.com/LorenzoPeri17/cffi-stubgen"
 
 [tool.hatch.build.targets.wheel]
-packages = ["cffi-stubgen"]
+packages = ["cffi_stubgen"]
 
 [project.scripts]
-executive = "project_name.__main__:main"
+cffi-stubgen = "cffi_stubgen.__main__:main"
