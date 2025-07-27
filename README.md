@@ -27,7 +27,7 @@ cffi-stubgen example_module._example
 
 This will generate `.pyi` stubs for your module, ready for type checking and IDE use.
 
-For a full walkthrough, see the [example/README.md](example/README.md) in this repository.
+For a full walkthrough, see the [example/README.md](https://github.com/LorenzoPeri17/cffi-stubgen/tree/main/example) in this repository.
 
 It will show you how `cffi-stubgen` can make `mypy` (and your IDE) aware of the arguments of
 
@@ -35,7 +35,7 @@ It will show you how `cffi-stubgen` can make `mypy` (and your IDE) aware of the 
 int add(int a, int b);
 ```
 
-![VSCode Autocomplete Example](example/assets/vscode.png)
+![VSCode Autocomplete Example](https://github.com/LorenzoPeri17/cffi-stubgen/blob/main/example/assets/vscode.png)
 
 ## Command Line Options
 
@@ -51,4 +51,4 @@ int add(int a, int b);
 
 ## Learn More
 
-See the [example/README.md](example/README.md) for a hands-on guide!
+See the [example](https://github.com/LorenzoPeri17/cffi-stubgen/tree/main/example) for a hands-on guide!

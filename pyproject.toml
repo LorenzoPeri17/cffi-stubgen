@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "cffi-stubgen"
-version="1.0.0"
+version="1.0.1"
 authors = [
     {name = "Lorenzo Peri"}
 ]
@@ -19,6 +19,17 @@ dependencies = [
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
+classifiers=[
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
 
 [project.urls]
 Repository = "https://github.com/LorenzoPeri17/cffi-stubgen"
