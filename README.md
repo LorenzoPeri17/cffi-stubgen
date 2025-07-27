@@ -1,3 +1,8 @@
+[![Build Status](https://github.com/LorenzoPeri17/cffi-stubgen/actions/workflows/tests.yaml/badge.svg)](https://github.com/<user>/<repo>/actions)
+[![PyPI version](https://img.shields.io/pypi/v/cffi-stubgen.svg)](https://pypi.org/project/cffi-stubgen/)
+[![License](https://img.shields.io/pypi/l/cffi-stubgen.svg)](https://github.com/LorenzoPeri17/cffi-stubgen/blob/main/LICENSE)
+[![Python versions](https://img.shields.io/pypi/pyversions/cffi-stubgen.svg)](https://pypi.org/project/cffi-stubgen/)
+
 # `cffi-stubgen`
 
 `cffi-stubgen` is a tool for automatically generating [PEP 561](https://www.python.org/dev/peps/pep-0561/) type stubs (`.pyi` files) for Python modules built with [cffi](https://cffi.readthedocs.io/). This makes it easy to add type hints to your CFFI-based extensions, unlocking the full power of static type checking and IDE features.
