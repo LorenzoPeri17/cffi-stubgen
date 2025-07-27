@@ -22,7 +22,6 @@ class CType:
 
     @classmethod
     def from_node(cls, arg: c_ast.Node) -> Self:
-        print(type(arg.type))
         match arg:
             case c_ast.TypeDecl():
                 arg_cname = " ".join(
